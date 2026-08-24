@@ -1,0 +1,15 @@
+# Markdown is formatted by hand in this project.
+#
+# Prettier normalises every unordered list marker to "-" and every thematic
+# break to "---". Both are hyphens, and this project's writing convention uses
+# "*" for bullets and no thematic breaks at all. Prettier offers no option to
+# change either behaviour, so the documentation is excluded from it instead.
+#
+# Source code is still formatted normally.
+
+*.md
+
+# Generated or vendored, never worth reformatting.
+package-lock.json
+.next
+data

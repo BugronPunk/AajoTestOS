@@ -1,0 +1,24 @@
+# Build plan for Nixpacks.
+#
+# Nixpacks runs an install phase of its own before the build phase. Putting
+# `npm ci` in the build command as well made it run twice, and the second run
+# tried to delete the node_modules the first run had just created. Nixpacks
+# keeps /app/node_modules/.cache mounted for caching, so that directory cannot
+# be removed and npm fails with:
+#
+#   npm error EBUSY: resource busy or locked, rmdir '/app/node_modules/.cache'
+#
+# The install therefore happens exactly once, here.
+#
+# `--include=dev` is required because Railway sets NODE_ENV=production, under
+# which npm skips devDependencies. TypeScript, Tailwind, the PostCSS plugin and
+# every @types package live there, and `next build` needs all of them.
+
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start"

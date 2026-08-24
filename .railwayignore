@@ -1,0 +1,25 @@
+# Keeps the build context small and, more importantly, keeps a locally built
+# node_modules out of the image.
+#
+# Without this, the generated Dockerfile's `COPY . /app/.` ships your machine's
+# node_modules into the container. `npm ci` then tries to delete that directory
+# before reinstalling, and on the builder's overlay filesystem the delete fails
+# with EBUSY on node_modules/.cache. Never copying it in avoids the problem
+# entirely, and the build gets faster because the context shrinks by 700 MB.
+
+node_modules
+.next
+out
+build
+
+# Runtime data belongs on a mounted volume, never baked into an image.
+data
+
+.git
+.gitignore
+*.log
+.DS_Store
+tsconfig.tsbuildinfo
+.env
+.env.*
+!.env.example
